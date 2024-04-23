@@ -1,1 +1,1 @@
-# note-app
+# E-commerce-app

@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block content%}
+{% load cart %}
+{% load filters %}
+
+<div class="container">
+   <div class="container">
+      <div class="border rounded p-4 m-4">
+         <p class="display-4 text-center"><strong> My Orders</strong></p>
+         <table class="table">
+            <thead>
+               <tr>
+                  <th class="text-center">Sr.No</th>
+                  <th class="text-center">Image</th>
+                  <th class="text-center">Name</th>
+                  <th class="text-center">Price</th>
+                  <th class="text-center">Quantity</th>
+                  <th class="text-center">Total</th>
+                  <th class="text-center">Date</th>
+                  <th class="text-center">Status</th>
+
+               </tr>
+            </thead>
+            <tbody>
+               {% for order in orders %}
+               <tr>
+                  <td class="text-center">{{forloop.counter}}</td>
+                  <td class="text-center"><img class="rounded-circle" style="height:80px" src="{{order.product.image.url}}"></td>
+                  <td class="text-center">{{order.product.name}}</td>
+                  <td class="text-center">{{order.price|currency}}</td>
+                  <td class="text-center">{{order.quantity}}</td>
+                  <td class="text-center">{{order.quantity|multiply:order.price|currency}}</td>
+                  <td class="text-center">{{order.date}}</td>
+                  {% if order.status == "Pending" %}
+                     <td class="text-center badge badge-warning">{{order.status}}</td>
+                  {% endif %}
+                  {% if order.status == "Success" %}
+                     <td class="text-center badge badge-success">{{order.status}}</td>
+                  {% endif %}
+               </tr>
+               {% endfor %}
+            </tbody>
+         </table>
+      </div>
+   </div>
+</div>
+
+{% endblock %}

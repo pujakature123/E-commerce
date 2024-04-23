@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block content%}
+{% load cart %}
+{% load filters %}
+
+<div class="container">
+   <div class="container">
+      <div class="border rounded p-4 m-4">
+         <p class="display-4 text-center"><strong> My Cart</strong></p>
+         <table class="table">
+            <thead>
+               <tr>
+                  <th class="text-center">Sr.No</th>
+                  <th class="text-center">Image</th>
+                  <th class="text-center">Name</th>
+                  <th class="text-center">Price</th>
+                  <th class="text-center">Quantity</th>
+                  <th class="text-center">Total</th>
+               </tr>
+            </thead>
+            {% if products %}
+               <tbody>
+                  {% for product in products %}
+                  <tr>
+                     <td class="text-center">{{forloop.counter}}</td>
+                     <td class="text-center"><img class="rounded-circle" style="height:80px" src="{{product.image.url}}"></td>
+                     <td class="text-center">{{product.name}}</td>
+                     <td class="text-center">{{product.price|currency}}</td>
+                     <td class="text-center">{{product|cart_product_count:request.session.cart|currency}}</td>
+                     <td class="text-center">{{product|total_price:request.session.cart|currency}}</td>
+                  </tr>
+                  {% endfor %}
+               </tbody>
+            {% endif %}
+            {% if products %}
+            <tfoot>
+               <tr>
+                  <th colspan="4"></th>
+                  <th class="text-center">Total</th>
+                  <th class="text-center">{{products|total_cart_price:request.session.cart|currency}}</th>
+               </tr>
+            </tfoot> 
+            {% endif %}
+         </table>
+         <hr>
+         <div class="m-3 p-3">
+            <a href="{% url 'check_out'%}" data-toggle = "modal" data-target = "#exampleModal" class="btn btn-outline-info border rounded col-lg-3 float-right">Check Out</a>
+         </div>
+      </div>
+   </div>
+</div>
+<!---------Modal---------->
+ 
+ <!-- Modal -->
+ <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+   <div class="modal-dialog" role="document">
+     <div class="modal-content">
+       <div class="modal-header">
+         <h5 class="modal-title" id="exampleModalLabel">Checkout Form</h5>
+         <hr>
+         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+           <span aria-hidden="true">&times;</span>
+         </button>
+       </div>
+       <div class="modal-body">
+         <div class="m-2 p-3">
+            <form action="{% url 'check_out'%}" method="post">
+               {% csrf_token %}
+               <form-group>
+                  <label for="">Address</label>
+                  <input type="text" name="address" id="" class="form-control" placeholder="Address"
+                  aria-describedby="helpId" required>
+               </form-group>
+               <form-group>
+                  <label for="">Contact No.</label>
+                  <input type="text" name="phone_no" id="" class="form-control" placeholder="9876543210"
+                  aria-describedby="helpId" required>
+               </form-group>
+               <br>
+               <p><strong>Payment Method:</strong></p>
+               <div class="form-check">
+                  <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" checked>
+                  <label class="form-check-label" for="flexRadioDefault1">
+                    Cash On Delivery
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" disabled>
+                  <label class="form-check-label" for="flexRadioDefault2" disable>
+                     Paypal IPN
+                  </label>
+                </div>
+            <button type="submit" class="btn btn-outline-info col-lg-6 float-right">Proceed</button>
+
+            </form>
+         </div>
+       </div>
+     </div>
+   </div>
+ </div>
+
+{% endblock %}
